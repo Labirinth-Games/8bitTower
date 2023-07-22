@@ -41,3 +41,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: ElementsWall
+    uniqueID: 3100173715
+    locked: 0
+  - name: Player
+    uniqueID: 1238190825
+    locked: 0
+  - name: Dialogs
+    uniqueID: 3106863693
+    locked: 0
