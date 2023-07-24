@@ -368,6 +368,8 @@
 -analyzer:"D:/Unity/Edit/2023.1.0b15/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 "Assets/Script/Assistent.cs"
 "Assets/Script/Helpers/StoryTeller.cs"
+"Assets/Script/Levels/AllHidden.cs"
+"Assets/Script/Levels/Door.cs"
 "Assets/Script/Levels/Lever.cs"
 "Assets/Script/Player.cs"
 "Assets/Script/ScriptableObjects/BookDialogs.cs"
