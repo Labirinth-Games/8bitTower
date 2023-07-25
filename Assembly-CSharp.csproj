@@ -59,11 +59,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Script\Assistent.cs" />
+    <Compile Include="Assets\Script\Helpers\DiceHelper.cs" />
     <Compile Include="Assets\Script\Helpers\StoryTeller.cs" />
     <Compile Include="Assets\Script\Player.cs" />
+    <Compile Include="Assets\Script\Enemies\EnemyBase.cs" />
+    <Compile Include="Assets\Script\Helpers\MoveRandomly.cs" />
     <Compile Include="Assets\Script\Levels\Door.cs" />
     <Compile Include="Assets\Script\Levels\AllHidden.cs" />
+    <Compile Include="Assets\Script\Utils\SpriteUtils.cs" />
     <Compile Include="Assets\Script\ScriptableObjects\BookDialogs.cs" />
+    <Compile Include="Assets\Script\UI\HitUI.cs" />
+    <Compile Include="Assets\Script\Enemies\Troll.cs" />
     <Compile Include="Assets\Script\Levels\Lever.cs" />
     <Compile Include="Assets\Script\UI\Dialog.cs" />
   </ItemGroup>

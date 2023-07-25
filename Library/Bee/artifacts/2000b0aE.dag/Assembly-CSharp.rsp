@@ -367,6 +367,10 @@
 -analyzer:"D:/Unity/Edit/2023.1.0b15/Editor/Data/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll"
 -analyzer:"D:/Unity/Edit/2023.1.0b15/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 "Assets/Script/Assistent.cs"
+"Assets/Script/Enemies/EnemyBase.cs"
+"Assets/Script/Enemies/Troll.cs"
+"Assets/Script/Helpers/DiceHelper.cs"
+"Assets/Script/Helpers/MoveRandomly.cs"
 "Assets/Script/Helpers/StoryTeller.cs"
 "Assets/Script/Levels/AllHidden.cs"
 "Assets/Script/Levels/Door.cs"
@@ -374,6 +378,8 @@
 "Assets/Script/Player.cs"
 "Assets/Script/ScriptableObjects/BookDialogs.cs"
 "Assets/Script/UI/Dialog.cs"
+"Assets/Script/UI/HitUI.cs"
+"Assets/Script/Utils/SpriteUtils.cs"
 -langversion:9.0
 
 /deterministic

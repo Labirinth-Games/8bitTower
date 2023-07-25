@@ -3,12 +3,15 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Enemy
+  - Levers
+  - Elements
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Elements
   - Water
   - UI
   - 
@@ -46,6 +49,9 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 1238190825
+    locked: 0
+  - name: Enemy
+    uniqueID: 3247051609
     locked: 0
   - name: Doors
     uniqueID: 568110123

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEngine.Events;
 using UnityEngine;
 
 namespace Helpers
@@ -9,6 +10,9 @@ namespace Helpers
     {
         [SerializeField] private BookDialogs bookDialogs;
         [SerializeField] private GameObject dialogBoxPrefab;
+
+        [Header("Callback")]
+        public UnityEvent OnFinish;
 
         private int _chapterActual = 0; // capitulo, momento separado por bloco de momento da historia
         private int _paragraphActual = 0; // paragrafo, fala em si que a classe irá produzir
@@ -61,6 +65,7 @@ namespace Helpers
                 yield return new WaitForSeconds(5f);
             }
 
+            OnFinish?.Invoke();
             Destroy(_dialogInstance);
         }
     }
