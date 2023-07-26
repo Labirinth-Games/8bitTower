@@ -21,6 +21,7 @@ namespace Helpers
 
         private string[,] _book; // array bideimencional com todos os dialogos que seram narrados pela classe
         private GameObject _dialogInstance;
+        private bool _isSpeaking = false;
 
         private void Start()
         {
@@ -28,6 +29,17 @@ namespace Helpers
 
             _chapterMax = _book.GetLength(0) - 1; // get rows amount
             _paragraphMax = _book.GetLength(1) - 1; // get columns
+        }
+
+        #region Gets/Sets
+        public bool IsSpeaking() { return _isSpeaking; }
+        #endregion
+
+        public void StartChapter(int chapter)
+        {
+            _isSpeaking = true;
+            CreateDialogUI();
+            StartCoroutine(AnimationDialog(chapter));
         }
 
         public bool NextParagraph(int chapter)
@@ -52,12 +64,6 @@ namespace Helpers
             _dialogInstance.transform.position = new Vector3(transform.position.x - 1f, transform.position.y + .8f, transform.position.z);
         }
 
-        public void StartChapter(int chapter)
-        {
-            CreateDialogUI();
-            StartCoroutine(AnimationDialog(chapter));
-        }
-
         IEnumerator AnimationDialog(int chapter)
         {
             while (NextParagraph(chapter))
@@ -66,6 +72,8 @@ namespace Helpers
             }
 
             OnFinish?.Invoke();
+            _isSpeaking = false;
+
             Destroy(_dialogInstance);
         }
     }

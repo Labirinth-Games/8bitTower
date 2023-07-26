@@ -33,12 +33,12 @@ namespace Enemy
             Destroy(gameObject);
         }
 
-        private void Start()
+        protected virtual void Start()
         {
             _perceptionZone.radius = perception;
         }
 
-        private void OnValidate()
+        protected virtual void OnValidate()
         {
             if(_perceptionZone == null)
                 _perceptionZone = GetComponent<CircleCollider2D>();

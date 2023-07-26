@@ -15,13 +15,19 @@ MonoBehaviour:
   dialogs:
   - chapter: 0
     paragraph: 0
-    message: "Ol\xE1 como vc vai?"
+    message: Hi... you are lost?
   - chapter: 0
     paragraph: 1
-    message: "Acho que voce est\xE1 preso n\xE9 kk"
+    message: hmm... its very danger here
   - chapter: 0
     paragraph: 2
-    message: "T\xE1 vou lhe ajudar, vc precisa achar uma chave"
+    message: I help you
   - chapter: 0
     paragraph: 3
-    message: "Onde? bom sei l\xE1 por ai"
+    message: we go open the door
+  - chapter: 0
+    paragraph: 4
+    message: Touch near
+  - chapter: 1
+    paragraph: 0
+    message: Good luck

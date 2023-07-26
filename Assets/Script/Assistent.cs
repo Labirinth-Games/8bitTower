@@ -8,16 +8,15 @@ public class Assistent : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Helpers.StoryTeller storyTeller;
+    [SerializeField] private GameObject[] SpawnPositions;
 
     private int _currentChapterStoryTeller;
-    private bool _isOpenDialog = false;
+    private int _currentPosition;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.transform.CompareTag("Player") && !_isOpenDialog)
+        if(collision.transform.CompareTag("Player") && !storyTeller.IsSpeaking())
         {
-            _isOpenDialog = true;
-
             storyTeller.StartChapter(_currentChapterStoryTeller);
         }
     }
@@ -25,6 +24,19 @@ public class Assistent : MonoBehaviour
     private void Start()
     {
         _currentChapterStoryTeller = 0;
-        storyTeller.OnFinish.AddListener(() => { _isOpenDialog = false; });
+        _currentPosition = 0;
+
+        transform.position = SpawnPositions[_currentPosition].transform.position;
+
+        storyTeller.StartChapter(_currentChapterStoryTeller);
+
+        // always change position when finish u dialog
+        storyTeller.OnFinish.AddListener(() =>
+        {
+            _currentPosition++;
+            _currentChapterStoryTeller++;
+
+            transform.position = SpawnPositions[_currentPosition].transform.position;
+        });
     }
 }

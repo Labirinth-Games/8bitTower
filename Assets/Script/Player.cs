@@ -24,50 +24,80 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float maxHp = 26;
     [SerializeField] private float hp = 26;
-    [SerializeField] private float speed = 0.2f;
+    [SerializeField] private float speed = 2;
+    [SerializeField] private float fastSpeed = 4;
 
     private Utils.SpriteUtils _spriteUtils;
     private Helpers.DiceHelper _dice;
     private UI.HitUI _hitUI;
     private bool _isDeath = false;
 
-    private float _fireRate = .5f;
+    private float _fireRate = .2f;
     private float _fireRateCooldown;
 
     private bool _hasAttack = false;
+
+    // to attack configs
+    private float _startTimer;
+    private float _holdMedium = .5f;
+    private float _holdLong = 1f;
 
     #region Actions
     public void Move()
     {
         float xMove = Input.GetAxisRaw("Horizontal");
         float yMove = Input.GetAxisRaw("Vertical");
+        float currentSpeed = speed;
 
         if (xMove != 0 || yMove != 0)
             animator.SetBool("Walk", true);
         else
             animator.SetBool("Walk", false);
 
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+            currentSpeed = fastSpeed;
+
         if (xMove != 0)
         {
             _spriteUtils.Flip(xMove, GetComponentInChildren<Renderer>().transform.localScale);
-            transform.position += Vector3.right * xMove * speed * Time.deltaTime;
+            transform.position += Vector3.right * xMove * currentSpeed * Time.deltaTime;
         }
 
         if (yMove != 0)
         {
-            transform.position += Vector3.up * yMove * speed * Time.deltaTime;
+            transform.position += Vector3.up * yMove * currentSpeed * Time.deltaTime;
         }
     }
 
     public void Attack()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && Time.time > _fireRateCooldown)
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            _startTimer = Time.time;
+            Debug.Log(("Loadding"));
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space) && Time.time > _fireRateCooldown)
         {
             _fireRateCooldown = Time.time + _fireRate;
-
-            animator.SetTrigger("Attack");
-
             _hasAttack = true;
+
+            if (_startTimer + _holdLong < Time.time)
+            {
+                Debug.Log(("hold long"));
+
+
+            }
+            else if (_startTimer + _holdMedium < Time.time)
+            {
+                Debug.Log(("hold medium"));
+
+            }
+            else
+            {
+                Debug.Log(("hold short"));
+                animator.SetTrigger("Attack");
+            }
         }
     }
 
@@ -96,14 +126,12 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Gets/Sets
-    public bool IsDeath()
-    {
-        return _isDeath;
-    }
+    public bool IsDeath() { return _isDeath; }
+    public float GetHp() { return hp; }
     #endregion
 
     #region Colliders
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.transform.CompareTag("Enemy") && _hasAttack)
         {
@@ -136,4 +164,40 @@ public class Player : MonoBehaviour
             _hitUI = GetComponent<HitUI>();
     }
     #endregion
+}
+
+public class PressAttack
+{
+    private float _startTimer;
+    private float _holdShort = .5f;
+    private float _holdMedium = 1f;
+    private float _holdLong = 2f;
+
+    public void Hold()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            _startTimer = Time.time;
+            Debug.Log(("Loadding"));
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            if(_startTimer + _holdLong > Time.time)
+            {
+                Debug.Log(("hold long"));
+
+            }
+            else if (_startTimer + _holdMedium > Time.time)
+            {
+                Debug.Log(("hold medium"));
+
+            }
+            else if (_startTimer + _holdShort > Time.time)
+            {
+                Debug.Log(("hold short"));
+
+            }
+        }
+    }
 }

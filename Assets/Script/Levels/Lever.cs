@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Events;
 using UnityEngine;
 
 public class Lever : MonoBehaviour
@@ -11,15 +10,16 @@ public class Lever : MonoBehaviour
 
     [Header("Settings")]
     public string id = "Lever 001";
-
-    [Header("Callbacks")]
-    public UnityEvent<string, bool> OnTriggerLever;
-
     [SerializeField] private bool _stateLever = false;
+
     private SpriteRenderer _renderer;
+    
+    public bool GetState()
+    {
+        return _stateLever;
+    }
 
-
-    private void LeverUpdate()
+    private void LeverRender()
     {
         Sprite lever = _stateLever ? turnOn : turnOff;
 
@@ -32,9 +32,7 @@ public class Lever : MonoBehaviour
         if (collision.transform.CompareTag("Player"))  
         {
             _stateLever = !_stateLever;
-            LeverUpdate();
-
-            OnTriggerLever?.Invoke(id, _stateLever);
+            LeverRender();
         }
     }
     #endregion
@@ -48,7 +46,7 @@ public class Lever : MonoBehaviour
             return;
         }
 
-        LeverUpdate();
+        LeverRender();
     }
 
     private void OnValidate()

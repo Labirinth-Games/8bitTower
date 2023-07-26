@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UI;
 using UnityEngine;
 using Utils;
-using static UnityEngine.RuleTile.TilingRuleOutput;
+using DG.Tweening;
+using Unity.VisualScripting;
 
 namespace Enemy
 {
@@ -19,18 +20,17 @@ namespace Enemy
         private UI.HitUI _hitUI;
 
         private float _cooldown = 1f;
-        private Coroutine _attackCoroutine;
+        private float _attackcooldown;
 
         #region Actions
-        IEnumerator Attack(Player player)
+        public void Attack(Player player)
         {
-           while(true)
-           {
-                animator.SetTrigger("Attack");
-                player.Hit(_dice.Roll(diceAttack) + strength);
+            if (Time.time < _attackcooldown) return;
+            
+            _attackcooldown = Time.time + _cooldown / dexterity;
 
-                yield return new WaitForSeconds(_cooldown / dexterity);
-           }
+            animator.SetTrigger("Attack");
+            player.Hit(_dice.Roll(diceAttack) + strength);
         }
 
         public override void Hit(float damage)
@@ -48,23 +48,39 @@ namespace Enemy
             }
         }
       
+        private void PassiveMode()
+        {
+            animator.SetBool("Walk", true);
+            _movement.Continue();
+        }
+
+        private void AggroMode(Player player)
+        {
+            _movement.Stop();
+            animator.SetBool("Walk", false);
+
+            _spriteUtils.Flip(player.transform.position.x - transform.position.x, GetComponentInChildren<Renderer>().transform.localScale);
+
+            Attack(player);
+        }
         #endregion
 
         #region Collisions
-        private void OnTriggerEnter2D(Collider2D collision)
+        private void OnTriggerStay2D(Collider2D collision)
         {
             if (collision.transform.CompareTag("Player") && isAggressive)
             {
                 Player player = collision.GetComponent<Player>();
 
-                if (player.IsDeath()) return;
+                if (player.IsDeath())
+                {
+                    PassiveMode();
+                    isAggressive = false;
+                    return;
+                }
 
-                _movement.Stop();
-                animator.SetBool("Walk", false);
-
-                _spriteUtils.Flip(collision.transform.position.x - transform.position.x, GetComponentInChildren<Renderer>().transform.localScale);
-
-                _attackCoroutine = StartCoroutine(Attack(player));
+                transform.DOMove(player.transform.position, 2f);
+                AggroMode(player);
             }
         }
 
@@ -72,37 +88,35 @@ namespace Enemy
         {
             if (collision.transform.CompareTag("Player"))
             {
-                _movement.Continue();
-                animator.SetBool("Walk", true);
-
-                if (_attackCoroutine != null)
-                {
-                    StopCoroutine(_attackCoroutine);
-                }
+                PassiveMode();
             }
 
         }
         #endregion
 
-        private void Start()
+        protected override void Start()
         {
-            base.perception = 1f;
+            base.perception = .4f;
             base.strength = 2f;
-            base.hp = 5;
-            base.maxHp = 5;
             base.velocity = 1;
             base.dexterity = 1f;
             base.protection = 4f;
+
             base.diceAttack = DiceType.D6;
+            
+            base.hp = 5;
+            base.maxHp = 5;
 
             _movement.OnMove.AddListener((dirX, dirY) =>
             {
                 _spriteUtils.Flip(dirX, GetComponentInChildren<Renderer>().transform.localScale);
                 animator.SetBool("Walk", true);
             });
+
+            base.Start();
         }
 
-        private void OnValidate()
+        protected override void OnValidate()
         {
             if (_spriteUtils == null)
                 _spriteUtils = GetComponent<SpriteUtils>(); 
@@ -112,6 +126,8 @@ namespace Enemy
             
             if (_hitUI== null)
                 _hitUI = GetComponent<HitUI>();
+
+            base.OnValidate();
         }
     }
 }

@@ -78,7 +78,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.49505234, y: 1}
+  m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
 --- !u!114 &344525017042192521
 MonoBehaviour:
@@ -96,8 +96,15 @@ MonoBehaviour:
   doorCloseVertical: {fileID: -624361977, guid: db708be17bd6e154d861657f7e035778, type: 3}
   doorOpenHorizontal: {fileID: -1266509013, guid: db708be17bd6e154d861657f7e035778, type: 3}
   doorCloseHorizontal: {fileID: 869762779325548650, guid: db708be17bd6e154d861657f7e035778, type: 3}
-  Opened: 0
-  doorOrientation: 0
+  isOpen: 0
+  doorOrientation: 1
+  doorConditions:
+  - lever: {fileID: 0}
+    condition: 0
+  - lever: {fileID: 0}
+    condition: 1
+  - lever: {fileID: 0}
+    condition: 1
 --- !u!1 &7264161115710665762
 GameObject:
   m_ObjectHideFlags: 0
@@ -169,9 +176,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 568110123
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: -624361977, guid: db708be17bd6e154d861657f7e035778, type: 3}
+  m_Sprite: {fileID: 869762779325548650, guid: db708be17bd6e154d861657f7e035778, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

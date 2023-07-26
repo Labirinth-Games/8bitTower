@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Events;
 using UnityEngine;
 
 public class Door : MonoBehaviour
@@ -10,38 +11,82 @@ public class Door : MonoBehaviour
     [SerializeField] private Sprite doorOpenHorizontal;
     [SerializeField] private Sprite doorCloseHorizontal;
 
-    [SerializeField] private bool Opened = false;
+    [SerializeField] private bool isOpen = false;
     [SerializeField] private DoorOrientation doorOrientation = DoorOrientation.Vertical;
+
+    [Header("Conditions")]
+    [SerializeField] private DoorCondition[] doorConditions;
+
+    [Header("Callbacks")]
+    public UnityEvent OnStepWrong;
 
     private SpriteRenderer _doorSpriteCurrent;
 
-
-    public void OpenDoor()
+    public void TestConditonsToOpen()
     {
-        Opened = !Opened;
+        if(doorConditions.Length > 0 && !isOpen)
+        {
+            bool condition = false;
+
+            for(var i = 0; i < doorConditions.Length; i++)
+            {
+                if(doorConditions[i].condition != doorConditions[i].lever?.GetState())
+                {
+                    condition = false;
+                    break;
+                }
+
+                condition = true;
+            }
+
+            if(condition)
+                Open();
+        }
+    }
+
+    private void Open()
+    {
+        isOpen = !isOpen;
         GetComponent<Collider2D>().enabled = false;  
 
         DoorRender();
     }
 
+    private void CollisionAdapter()
+    {
+        if(doorOrientation == DoorOrientation.Vertical)
+            GetComponent<BoxCollider2D>().size = new Vector2(.5f, 1f);
+
+        if (doorOrientation == DoorOrientation.Horizontal)
+        {
+            GetComponent<BoxCollider2D>().size = new Vector2(1f, 1f);
+            GetComponent<BoxCollider2D>().offset = Vector2.zero;
+        }
+    }
+
     private void DoorRender()
     {
-        if (Opened && doorOrientation == DoorOrientation.Vertical)
+        if (isOpen && doorOrientation == DoorOrientation.Vertical)
         {
             _doorSpriteCurrent.sprite = doorOpenVertical;
         }
-        else if (!Opened && doorOrientation == DoorOrientation.Vertical)
+        else if (!isOpen && doorOrientation == DoorOrientation.Vertical)
         {
             _doorSpriteCurrent.sprite = doorCloseVertical;
         }
-        else if (Opened && doorOrientation == DoorOrientation.Horizontal)
+        else if (isOpen && doorOrientation == DoorOrientation.Horizontal)
         {
             _doorSpriteCurrent.sprite = doorOpenHorizontal;
         }
-        else if (!Opened && doorOrientation == DoorOrientation.Horizontal)
+        else if (!isOpen && doorOrientation == DoorOrientation.Horizontal)
         {
             _doorSpriteCurrent.sprite = doorCloseHorizontal;
         }
+    }
+
+    private void FixedUpdate()
+    {
+        TestConditonsToOpen();
     }
 
     private void Start()
@@ -55,7 +100,17 @@ public class Door : MonoBehaviour
         {
             _doorSpriteCurrent = gameObject.GetComponentInChildren<SpriteRenderer>();
         }
+        
+        DoorRender();
+        CollisionAdapter();
     }
+}
+
+[System.Serializable]
+public class DoorCondition
+{
+    public Lever lever;
+    public bool condition;
 }
 
 enum DoorOrientation

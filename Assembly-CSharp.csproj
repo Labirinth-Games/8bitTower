@@ -65,6 +65,7 @@
     <Compile Include="Assets\Script\Enemies\EnemyBase.cs" />
     <Compile Include="Assets\Script\Helpers\MoveRandomly.cs" />
     <Compile Include="Assets\Script\Levels\Door.cs" />
+    <Compile Include="Assets\Script\HUD\HpHud.cs" />
     <Compile Include="Assets\Script\Levels\AllHidden.cs" />
     <Compile Include="Assets\Script\Utils\SpriteUtils.cs" />
     <Compile Include="Assets\Script\ScriptableObjects\BookDialogs.cs" />
