@@ -55,7 +55,10 @@ public class Door : MonoBehaviour
     private void CollisionAdapter()
     {
         if(doorOrientation == DoorOrientation.Vertical)
-            GetComponent<BoxCollider2D>().size = new Vector2(.5f, 1f);
+        {
+            GetComponent<BoxCollider2D>().size = new Vector2(.25f, 1f);
+            GetComponent<BoxCollider2D>().offset = new Vector2(.25f, 0f);
+        }
 
         if (doorOrientation == DoorOrientation.Horizontal)
         {

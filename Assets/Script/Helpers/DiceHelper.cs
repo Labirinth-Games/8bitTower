@@ -6,12 +6,11 @@ namespace Helpers
 {
     public class DiceHelper : MonoBehaviour
     {
-        public int Roll(DiceType diceType)
+        public static int Roll(DiceType diceType)
         {
             return Random.Range(1, (int)diceType);
         }
     }
-
 
     public enum DiceType
     {

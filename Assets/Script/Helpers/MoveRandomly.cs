@@ -15,12 +15,13 @@ namespace Helpers
         public UnityEvent<float, float> OnMove;
         public UnityEvent OnStop;
         public UnityEvent OnContinue;
+        public UnityEvent OnStart;
         
 
         private float cooldownTimestamp;
         private Vector2 movementDirection;
         private Vector2 movementPerSecond;
-        private bool _stop = false;
+        private bool _stop = true;
 
         public void calcuateNewMovementVector()
         {
@@ -32,6 +33,12 @@ namespace Helpers
             movementPerSecond = movementDirection * characterVelocity;
 
             OnMove?.Invoke(dirX, dirY);
+        }
+
+        public void Start()
+        {
+            _stop = true;
+            OnStart?.Invoke();
         }
 
         public void Stop()

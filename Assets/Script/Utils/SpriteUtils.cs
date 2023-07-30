@@ -6,17 +6,16 @@ namespace Utils
 {
     public class SpriteUtils : MonoBehaviour
     {
-        private float _lastPositionFace = 1;
-
-        public void Flip(float dirX, Vector3 scale)
+        public static void Flip(float dirX, Transform transform)
         {
-            if (dirX == _lastPositionFace)
+            Vector3 scale = transform.localScale;
+            float signScaleCurrent = Mathf.Sign(scale.x);
+
+            if (dirX == signScaleCurrent)
                 return;
 
-            scale.x *= Mathf.Sign(dirX);
-
+            scale.x *= -1;
             transform.localScale = scale;
-            _lastPositionFace = dirX;
         }
     }
 }

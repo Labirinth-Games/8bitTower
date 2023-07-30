@@ -12,18 +12,13 @@ namespace Enemy
         [SerializeField] protected Animator animator;
 
         [Header("Stats")]
-        [SerializeField] protected float intelligence;
-        [SerializeField] protected float strength;
-        [SerializeField] protected float dexterity;
-        [SerializeField] protected float constitution;
-        [SerializeField] protected float protection;
-        [SerializeField] protected float perception = .5f; // size used to detection if player its close.
-        [SerializeField] protected DiceType diceAttack;
+        [SerializeField] protected StatsScriptableObject stats;
 
         [SerializeField] protected float maxHp;
         [SerializeField] protected float hp;
         [SerializeField] protected float velocity; // movement of the velocity
         [SerializeField] protected bool isAggressive = true;
+        [SerializeField] protected bool canMove = true;
 
         protected CircleCollider2D _perceptionZone;
 
@@ -35,7 +30,7 @@ namespace Enemy
 
         protected virtual void Start()
         {
-            _perceptionZone.radius = perception;
+            _perceptionZone.radius = stats.perception;
         }
 
         protected virtual void OnValidate()

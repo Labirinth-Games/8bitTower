@@ -58,16 +58,21 @@
     <Analyzer Include="D:\Unity\Edit\2023.1.0b15\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Script\Powers\Fireball.cs" />
+    <Compile Include="Assets\Script\Helpers\AttackHoldHelpers.cs" />
     <Compile Include="Assets\Script\Assistent.cs" />
     <Compile Include="Assets\Script\Helpers\DiceHelper.cs" />
     <Compile Include="Assets\Script\Helpers\StoryTeller.cs" />
+    <Compile Include="Assets\Script\GameManager.cs" />
     <Compile Include="Assets\Script\Player.cs" />
     <Compile Include="Assets\Script\Enemies\EnemyBase.cs" />
     <Compile Include="Assets\Script\Helpers\MoveRandomly.cs" />
     <Compile Include="Assets\Script\Levels\Door.cs" />
     <Compile Include="Assets\Script\HUD\HpHud.cs" />
     <Compile Include="Assets\Script\Levels\AllHidden.cs" />
+    <Compile Include="Assets\Script\Powers\BigBlaster.cs" />
     <Compile Include="Assets\Script\Utils\SpriteUtils.cs" />
+    <Compile Include="Assets\Script\ScriptableObjects\StatsScriptableObject.cs" />
     <Compile Include="Assets\Script\ScriptableObjects\BookDialogs.cs" />
     <Compile Include="Assets\Script\UI\HitUI.cs" />
     <Compile Include="Assets\Script\Enemies\Troll.cs" />

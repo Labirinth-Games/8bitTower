@@ -1,5 +1,6 @@
 using Enemy;
 using Helpers;
+using Manager;
 using System.Collections;
 using System.Collections.Generic;
 using UI;
@@ -11,36 +12,26 @@ public class Player : MonoBehaviour
 {
     [Header("References")]
     public Animator animator;
+    public Helpers.AttackHoldHelpers attackHold;
+
+    [Header("Attacks")]
+    public GameObject fireballPrefab;
+    public GameObject bigBlasterPrefab;
 
     [Header("Stats")]
-    [SerializeField] private float intelligence;
-    [SerializeField] private float strength;
-    [SerializeField] private float dexterity;
-    [SerializeField] private float constitution;
-    [SerializeField] private float charisma;
-    [SerializeField] private float perception = .5f; // size used to detection if player its close.
-    [SerializeField] private float protection = 5;
-    [SerializeField] private DiceType diceAttack = DiceType.D6;
+    [SerializeField] private StatsScriptableObject stats;
+    
 
     [SerializeField] private float maxHp = 26;
     [SerializeField] private float hp = 26;
     [SerializeField] private float speed = 2;
     [SerializeField] private float fastSpeed = 4;
 
-    private Utils.SpriteUtils _spriteUtils;
-    private Helpers.DiceHelper _dice;
     private UI.HitUI _hitUI;
     private bool _isDeath = false;
 
-    private float _fireRate = .2f;
-    private float _fireRateCooldown;
-
     private bool _hasAttack = false;
-
-    // to attack configs
-    private float _startTimer;
-    private float _holdMedium = .5f;
-    private float _holdLong = 1f;
+    private float _playerFaceSide = 1;
 
     #region Actions
     public void Move()
@@ -59,7 +50,9 @@ public class Player : MonoBehaviour
 
         if (xMove != 0)
         {
-            _spriteUtils.Flip(xMove, GetComponentInChildren<Renderer>().transform.localScale);
+            _playerFaceSide = xMove;
+
+            SpriteUtils.Flip(xMove, GetComponentInChildren<Renderer>().transform);
             transform.position += Vector3.right * xMove * currentSpeed * Time.deltaTime;
         }
 
@@ -71,34 +64,7 @@ public class Player : MonoBehaviour
 
     public void Attack()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            _startTimer = Time.time;
-            Debug.Log(("Loadding"));
-        }
-
-        if (Input.GetKeyUp(KeyCode.Space) && Time.time > _fireRateCooldown)
-        {
-            _fireRateCooldown = Time.time + _fireRate;
-            _hasAttack = true;
-
-            if (_startTimer + _holdLong < Time.time)
-            {
-                Debug.Log(("hold long"));
-
-
-            }
-            else if (_startTimer + _holdMedium < Time.time)
-            {
-                Debug.Log(("hold medium"));
-
-            }
-            else
-            {
-                Debug.Log(("hold short"));
-                animator.SetTrigger("Attack");
-            }
-        }
+       attackHold?.Hold();
     }
 
     public void Hit(float damage)
@@ -107,7 +73,7 @@ public class Player : MonoBehaviour
 
         if (hp < 0) Die();
         
-        if(damage >= protection)
+        if(damage >= stats.protection)
         {
             hp -= damage;
             _hitUI.Display(damage.ToString());
@@ -133,15 +99,46 @@ public class Player : MonoBehaviour
     #region Colliders
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // attack hit box
         if (collision.transform.CompareTag("Enemy") && _hasAttack)
         {
             EnemyBase enemy = collision.GetComponent<EnemyBase>();
-            enemy?.Hit(_dice.Roll(diceAttack) + strength);
+            enemy?.Hit(DiceHelper.Roll(stats.damagerDice) + stats.strength);
 
             _hasAttack = false;
         }
     }
     #endregion
+
+    private void Subscribers()
+    {
+        // config attack hold
+        if (attackHold != null)
+        {
+            attackHold.OnAttackFire.AddListener(() => { _hasAttack = true; });
+            attackHold.OnShortPress.AddListener(() => { animator.SetTrigger("Attack"); });
+            attackHold.OnMediumPress.AddListener(() =>
+            {
+                animator.SetTrigger("Attack Medium");
+
+                var instante = Instantiate(fireballPrefab);
+
+                instante.GetComponent<Fireball>().SetDirection(_playerFaceSide);
+                SpriteUtils.Flip(_playerFaceSide, instante.transform);
+                instante.transform.position = new Vector2(transform.position.x + (.5f * _playerFaceSide), transform.position.y);
+            }); 
+            
+            attackHold.OnLongPress.AddListener(() =>
+            {
+                animator.SetTrigger("Attack Medium");
+
+                var instante = Instantiate(bigBlasterPrefab);
+
+                instante.GetComponent<BigBlaster>().SetDirection(_playerFaceSide);
+                instante.transform.position = new Vector2(transform.position.x + (.5f * _playerFaceSide), transform.position.y);
+            });
+        }
+    }
 
     #region Unity Events
     private void Update()
@@ -154,50 +151,10 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        if (_spriteUtils == null)
-            _spriteUtils = GetComponent<SpriteUtils>();
-
-        if (_dice == null)
-            _dice = GetComponent<DiceHelper>(); 
-
         if (_hitUI == null)
             _hitUI = GetComponent<HitUI>();
+
+        Subscribers();
     }
     #endregion
-}
-
-public class PressAttack
-{
-    private float _startTimer;
-    private float _holdShort = .5f;
-    private float _holdMedium = 1f;
-    private float _holdLong = 2f;
-
-    public void Hold()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            _startTimer = Time.time;
-            Debug.Log(("Loadding"));
-        }
-
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            if(_startTimer + _holdLong > Time.time)
-            {
-                Debug.Log(("hold long"));
-
-            }
-            else if (_startTimer + _holdMedium > Time.time)
-            {
-                Debug.Log(("hold medium"));
-
-            }
-            else if (_startTimer + _holdShort > Time.time)
-            {
-                Debug.Log(("hold short"));
-
-            }
-        }
-    }
 }

@@ -16,7 +16,6 @@ namespace Enemy
         [SerializeField] private Helpers.MoveRandomly _movement;
         
         private Utils.SpriteUtils _spriteUtils;
-        private Helpers.DiceHelper _dice;
         private UI.HitUI _hitUI;
 
         private float _cooldown = 1f;
@@ -27,17 +26,17 @@ namespace Enemy
         {
             if (Time.time < _attackcooldown) return;
             
-            _attackcooldown = Time.time + _cooldown / dexterity;
+            _attackcooldown = Time.time + _cooldown / stats.dexterity;
 
             animator.SetTrigger("Attack");
-            player.Hit(_dice.Roll(diceAttack) + strength);
+            player.Hit(DiceHelper.Roll(stats.damagerDice) + stats.strength);
         }
 
         public override void Hit(float damage)
         {
             if (hp < 0) Die();
 
-            if (damage >= protection)
+            if (damage >= stats.protection)
             {
                 hp -= damage;
                 _hitUI.Display(damage.ToString());
@@ -59,7 +58,7 @@ namespace Enemy
             _movement.Stop();
             animator.SetBool("Walk", false);
 
-            _spriteUtils.Flip(player.transform.position.x - transform.position.x, GetComponentInChildren<Renderer>().transform.localScale);
+            SpriteUtils.Flip(player.transform.position.x - transform.position.x, GetComponentInChildren<Renderer>().transform);
 
             Attack(player);
         }
@@ -94,24 +93,30 @@ namespace Enemy
         }
         #endregion
 
+        private void Subscribers()
+        {
+            _movement.OnMove.AddListener((dirX, dirY) =>
+            {
+                SpriteUtils.Flip(dirX, GetComponentInChildren<Renderer>().transform);
+                animator.SetBool("Walk", true);
+            });
+        }
+
         protected override void Start()
         {
-            base.perception = .4f;
-            base.strength = 2f;
-            base.velocity = 1;
-            base.dexterity = 1f;
-            base.protection = 4f;
-
-            base.diceAttack = DiceType.D6;
+            base.stats.perception = .4f;
+            base.stats.strength = 2f;
+            base.stats.dexterity = 1f;
+            base.stats.protection = 4f;
+            base.stats.damagerDice = DiceType.D6;
             
             base.hp = 5;
             base.maxHp = 5;
+            base.velocity = 1;
 
-            _movement.OnMove.AddListener((dirX, dirY) =>
-            {
-                _spriteUtils.Flip(dirX, GetComponentInChildren<Renderer>().transform.localScale);
-                animator.SetBool("Walk", true);
-            });
+            if (canMove) _movement.Start();
+
+            Subscribers();       
 
             base.Start();
         }
@@ -120,9 +125,6 @@ namespace Enemy
         {
             if (_spriteUtils == null)
                 _spriteUtils = GetComponent<SpriteUtils>(); 
-            
-            if (_dice == null)
-                _dice = GetComponent<DiceHelper>(); 
             
             if (_hitUI== null)
                 _hitUI = GetComponent<HitUI>();
