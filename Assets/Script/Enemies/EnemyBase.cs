@@ -23,6 +23,12 @@ namespace Enemy
         protected CircleCollider2D _perceptionZone;
 
         public virtual void Hit(float damage) { }
+
+        public void SetAggressive(bool aggro)
+        {
+            isAggressive = aggro;
+        }
+
         public virtual void Die() 
         {
             Destroy(gameObject);
@@ -33,7 +39,7 @@ namespace Enemy
             _perceptionZone.radius = stats.perception;
         }
 
-        protected virtual void OnValidate()
+        protected virtual void Awake()
         {
             if(_perceptionZone == null)
                 _perceptionZone = GetComponent<CircleCollider2D>();

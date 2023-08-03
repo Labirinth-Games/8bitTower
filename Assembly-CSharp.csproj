@@ -59,21 +59,29 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Script\Powers\Fireball.cs" />
+    <Compile Include="Assets\Script\Levels\Zone.cs" />
     <Compile Include="Assets\Script\Helpers\AttackHoldHelpers.cs" />
     <Compile Include="Assets\Script\Assistent.cs" />
+    <Compile Include="Assets\Script\Interfaces\IBlackBoxOutput.cs" />
     <Compile Include="Assets\Script\Helpers\DiceHelper.cs" />
+    <Compile Include="Assets\Script\Helpers\Black Box\BlackBoxHelper.cs" />
     <Compile Include="Assets\Script\Helpers\StoryTeller.cs" />
+    <Compile Include="Assets\Script\Utils\ColorUtils.cs" />
     <Compile Include="Assets\Script\GameManager.cs" />
     <Compile Include="Assets\Script\Player.cs" />
     <Compile Include="Assets\Script\Enemies\EnemyBase.cs" />
     <Compile Include="Assets\Script\Helpers\MoveRandomly.cs" />
     <Compile Include="Assets\Script\Levels\Door.cs" />
     <Compile Include="Assets\Script\HUD\HpHud.cs" />
-    <Compile Include="Assets\Script\Levels\AllHidden.cs" />
     <Compile Include="Assets\Script\Powers\BigBlaster.cs" />
     <Compile Include="Assets\Script\Utils\SpriteUtils.cs" />
+    <Compile Include="Assets\Script\Items\Key.cs" />
+    <Compile Include="Assets\Script\Items\ItemBase.cs" />
+    <Compile Include="Assets\Script\Helpers\Unlock.cs" />
     <Compile Include="Assets\Script\ScriptableObjects\StatsScriptableObject.cs" />
     <Compile Include="Assets\Script\ScriptableObjects\BookDialogs.cs" />
+    <Compile Include="Assets\Script\Helpers\Black Box\BlackBoxInput.cs" />
+    <Compile Include="Assets\Script\Accessories\Bag.cs" />
     <Compile Include="Assets\Script\UI\HitUI.cs" />
     <Compile Include="Assets\Script\Enemies\Troll.cs" />
     <Compile Include="Assets\Script\Levels\Lever.cs" />

@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Events;
 using UnityEngine;
+using Unity.VisualScripting.Antlr3.Runtime;
 
-public class Door : MonoBehaviour
+public class Door : MonoBehaviour, IBlackBoxOutput
 {
     [Header("References")]
     [SerializeField] private Sprite doorOpenVertical;
@@ -14,41 +15,14 @@ public class Door : MonoBehaviour
     [SerializeField] private bool isOpen = false;
     [SerializeField] private DoorOrientation doorOrientation = DoorOrientation.Vertical;
 
-    [Header("Conditions")]
-    [SerializeField] private DoorCondition[] doorConditions;
-
-    [Header("Callbacks")]
-    public UnityEvent OnStepWrong;
-
     private SpriteRenderer _doorSpriteCurrent;
 
-    public void TestConditonsToOpen()
+    public void Unlock()
     {
-        if(doorConditions.Length > 0 && !isOpen)
-        {
-            bool condition = false;
+        if (isOpen) return;
 
-            for(var i = 0; i < doorConditions.Length; i++)
-            {
-                if(doorConditions[i].condition != doorConditions[i].lever?.GetState())
-                {
-                    condition = false;
-                    break;
-                }
-
-                condition = true;
-            }
-
-            if(condition)
-                Open();
-        }
-    }
-
-    private void Open()
-    {
-        isOpen = !isOpen;
-        GetComponent<Collider2D>().enabled = false;  
-
+        isOpen = true;
+        GetComponent<Collider2D>().enabled = false;
         DoorRender();
     }
 
@@ -87,16 +61,6 @@ public class Door : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
-    {
-        TestConditonsToOpen();
-    }
-
-    private void Start()
-    {
-        DoorRender();
-    }
-
     private void OnValidate()
     {
         if(_doorSpriteCurrent == null)
@@ -107,13 +71,6 @@ public class Door : MonoBehaviour
         DoorRender();
         CollisionAdapter();
     }
-}
-
-[System.Serializable]
-public class DoorCondition
-{
-    public Lever lever;
-    public bool condition;
 }
 
 enum DoorOrientation

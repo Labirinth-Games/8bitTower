@@ -33,25 +33,27 @@ namespace Helpers
                 _isLoaddingAttack = true;
             }
 
-            if (Input.GetKeyUp(KeyCode.Space) && Time.time > _fireRateCooldown)
+            if (Input.GetKeyUp(KeyCode.Space))
             {
                 _isLoaddingAttack = false;
-
-                _fireRateCooldown = Time.time + fireRate;
                 OnAttackFire?.Invoke();
 
+                if(Time.time > _fireRateCooldown)
+                {
+                    _fireRateCooldown = Time.time + fireRate;
 
-                if (_startTimer + holdLong < Time.time)
-                {
-                    OnLongPress?.Invoke();
-                }
-                else if (_startTimer + holdMedium < Time.time)
-                {
-                    OnMediumPress?.Invoke();
-                }
-                else
-                {
-                    OnShortPress?.Invoke();
+                    if (_startTimer + holdLong < Time.time)
+                    {
+                        OnLongPress?.Invoke();
+                    }
+                    else if (_startTimer + holdMedium < Time.time)
+                    {
+                        OnMediumPress?.Invoke();
+                    }
+                    else
+                    {
+                        OnShortPress?.Invoke();
+                    }
                 }
             }
         }
@@ -61,14 +63,14 @@ namespace Helpers
             var scale = barAttackPrefab.transform.localScale;
             scale.x += .003f;
             
-            if(scale.x < 2)
+            if(scale.x < 2.2)
             {
                 barAttackPrefab.transform.localScale = scale;
 
                 if (_startTimer + holdLong < Time.time)
-                    barAttackPrefab.GetComponent<SpriteRenderer>().color = Color.magenta;
+                    barAttackPrefab.GetComponent<SpriteRenderer>().color = Utils.ColorUtils.HexToColor("#957acc");
                 else if (_startTimer + holdMedium < Time.time)
-                    barAttackPrefab.GetComponent<SpriteRenderer>().color = Color.yellow;
+                    barAttackPrefab.GetComponent<SpriteRenderer>().color = Utils.ColorUtils.HexToColor("#e7b21c");
                 else
                     barAttackPrefab.GetComponent<SpriteRenderer>().color = Color.white;
             }

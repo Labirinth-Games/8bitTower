@@ -68,7 +68,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.25247383, y: 0}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -92,19 +92,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 923eb25854f917d4c90336d2fbf36059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  doorOpenVertical: {fileID: -2089413844, guid: db708be17bd6e154d861657f7e035778, type: 3}
-  doorCloseVertical: {fileID: -624361977, guid: db708be17bd6e154d861657f7e035778, type: 3}
-  doorOpenHorizontal: {fileID: -1266509013, guid: db708be17bd6e154d861657f7e035778, type: 3}
-  doorCloseHorizontal: {fileID: 869762779325548650, guid: db708be17bd6e154d861657f7e035778, type: 3}
+  doorOpenVertical: {fileID: -873675834, guid: 4337a375232dca540ad88f3ad2c38181, type: 3}
+  doorCloseVertical: {fileID: -7776463086802498302, guid: 4337a375232dca540ad88f3ad2c38181, type: 3}
+  doorOpenHorizontal: {fileID: -7776463086802498302, guid: 4337a375232dca540ad88f3ad2c38181, type: 3}
+  doorCloseHorizontal: {fileID: -6323946133154458348, guid: c6a41bcec84c5254b858ac5fab66cecd, type: 3}
   isOpen: 0
   doorOrientation: 1
-  doorConditions:
-  - lever: {fileID: 0}
-    condition: 0
-  - lever: {fileID: 0}
-    condition: 1
-  - lever: {fileID: 0}
-    condition: 1
 --- !u!1 &7264161115710665762
 GameObject:
   m_ObjectHideFlags: 0
@@ -178,7 +171,7 @@ SpriteRenderer:
   m_SortingLayerID: 568110123
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 869762779325548650, guid: db708be17bd6e154d861657f7e035778, type: 3}
+  m_Sprite: {fileID: -6323946133154458348, guid: c6a41bcec84c5254b858ac5fab66cecd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

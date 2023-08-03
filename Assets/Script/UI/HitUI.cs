@@ -10,7 +10,7 @@ namespace UI
     {
         [SerializeField] private GameObject HitUIPrefab;
 
-        public void Display(string value, float timeToDestroy = 1f)
+        public void Display(string value, string hexColor = "#dd3a28", float timeToDestroy = 1f)
         {
             if (HitUIPrefab != null)
             {
@@ -19,6 +19,7 @@ namespace UI
 
                 instance.transform.DOShakePosition(1f, .2f);
                 instance.GetComponentInChildren<TextMeshPro>().text = value;
+                instance.GetComponentInChildren<TextMeshPro>().color = Utils.ColorUtils.HexToColor(hexColor);
 
                 Destroy(instance, timeToDestroy);
             }

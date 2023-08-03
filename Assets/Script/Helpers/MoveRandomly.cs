@@ -35,9 +35,9 @@ namespace Helpers
             OnMove?.Invoke(dirX, dirY);
         }
 
-        public void Start()
+        public void Init()
         {
-            _stop = true;
+            _stop = false;
             OnStart?.Invoke();
         }
 

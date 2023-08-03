@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class Lever : MonoBehaviour
+public class Lever : BlackBoxInput
 {
     [Header("References")]
     [SerializeField] private Sprite turnOn;
@@ -10,18 +11,13 @@ public class Lever : MonoBehaviour
 
     [Header("Settings")]
     public string id = "Lever 001";
-    [SerializeField] private bool _stateLever = false;
 
     private SpriteRenderer _renderer;
-    
-    public bool GetState()
-    {
-        return _stateLever;
-    }
 
+    
     private void LeverRender()
     {
-        Sprite lever = _stateLever ? turnOn : turnOff;
+        Sprite lever = base.state ? turnOn : turnOff;
 
         _renderer.sprite = lever;
     }
@@ -31,12 +27,13 @@ public class Lever : MonoBehaviour
     {
         if (collision.transform.CompareTag("Player"))  
         {
-            _stateLever = !_stateLever;
+            base.state = !base.state;
             LeverRender();
+
+            OnChangeInput?.Invoke(base.state, gameObject.GetComponent<BlackBoxInput>());
         }
     }
     #endregion
-
 
     #region Unity Events
     private void Start()

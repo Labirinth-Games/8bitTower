@@ -15,7 +15,6 @@ namespace Enemy
         [Header("References Local")]
         [SerializeField] private Helpers.MoveRandomly _movement;
         
-        private Utils.SpriteUtils _spriteUtils;
         private UI.HitUI _hitUI;
 
         private float _cooldown = 1f;
@@ -39,11 +38,11 @@ namespace Enemy
             if (damage >= stats.protection)
             {
                 hp -= damage;
-                _hitUI.Display(damage.ToString());
+                _hitUI.Display(damage.ToString(), "#957acc");
             }
             else
             {
-                _hitUI.Display("Miss");
+                _hitUI.Display("Miss", "#957acc");
             }
         }
       
@@ -104,32 +103,19 @@ namespace Enemy
 
         protected override void Start()
         {
-            base.stats.perception = .4f;
-            base.stats.strength = 2f;
-            base.stats.dexterity = 1f;
-            base.stats.protection = 4f;
-            base.stats.damagerDice = DiceType.D6;
-            
-            base.hp = 5;
-            base.maxHp = 5;
-            base.velocity = 1;
-
-            if (canMove) _movement.Start();
+            if (canMove) _movement.Init();
 
             Subscribers();       
 
             base.Start();
         }
 
-        protected override void OnValidate()
-        {
-            if (_spriteUtils == null)
-                _spriteUtils = GetComponent<SpriteUtils>(); 
-            
+        protected override void Awake()
+        {            
             if (_hitUI== null)
                 _hitUI = GetComponent<HitUI>();
 
-            base.OnValidate();
+            base.Awake();
         }
     }
 }

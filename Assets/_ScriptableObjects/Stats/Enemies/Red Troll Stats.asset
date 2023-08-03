@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e19dfe0f17180241bde5f65eed4e502, type: 3}
+  m_Name: Red Troll Stats
+  m_EditorClassIdentifier: 
+  intelligence: 2
+  strength: 3
+  dexterity: 1
+  constitution: 1
+  charisma: 1
+  perception: 1
+  protection: 6
+  luck: 1
+  damagerDice: 8

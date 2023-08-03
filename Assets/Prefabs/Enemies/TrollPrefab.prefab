@@ -139,7 +139,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7936483580974083840}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -14.47, y: -3.9, z: -0.028007826}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -164,7 +164,7 @@ MonoBehaviour:
   maxHp: 20
   hp: 20
   velocity: 1
-  isAggressive: 0
+  isAggressive: 1
   canMove: 1
   _movement: {fileID: 2201971283982559246}
 --- !u!61 &8579459775802621952

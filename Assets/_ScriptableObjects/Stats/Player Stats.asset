@@ -19,4 +19,5 @@ MonoBehaviour:
   charisma: 1
   perception: 0.5
   protection: 5
+  luck: 1
   damagerDice: 6

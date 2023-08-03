@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Enemy;
 using Helpers;
 using Manager;
@@ -13,6 +14,8 @@ public class Player : MonoBehaviour
     [Header("References")]
     public Animator animator;
     public Helpers.AttackHoldHelpers attackHold;
+    public GameObject dashPrefab;
+    public Accessories.Bag bag;
 
     [Header("Attacks")]
     public GameObject fireballPrefab;
@@ -26,12 +29,14 @@ public class Player : MonoBehaviour
     [SerializeField] private float hp = 26;
     [SerializeField] private float speed = 2;
     [SerializeField] private float fastSpeed = 4;
+    [SerializeField] private float cooldownDash = 1f;
 
     private UI.HitUI _hitUI;
     private bool _isDeath = false;
 
     private bool _hasAttack = false;
     private float _playerFaceSide = 1;
+    private float _timeDashCooldown;
 
     #region Actions
     public void Move()
@@ -59,6 +64,21 @@ public class Player : MonoBehaviour
         if (yMove != 0)
         {
             transform.position += Vector3.up * yMove * currentSpeed * Time.deltaTime;
+        }
+    }
+
+    public void Dash()
+    {
+        if(Input.GetKeyDown(KeyCode.LeftShift) && Time.time > _timeDashCooldown)
+        {
+            _timeDashCooldown = Time.time + cooldownDash;
+
+            var instante = Instantiate(dashPrefab);
+            instante.transform.position = new Vector2(transform.position.x, transform.position.y - .3f);
+            SpriteUtils.Flip(_playerFaceSide, instante.transform);
+
+            transform.position += Vector3.right * _playerFaceSide * speed * (.3f * stats.dexterity);
+            Destroy(instante, .6f);
         }
     }
 
@@ -102,10 +122,10 @@ public class Player : MonoBehaviour
         // attack hit box
         if (collision.transform.CompareTag("Enemy") && _hasAttack)
         {
+            _hasAttack = false;
+
             EnemyBase enemy = collision.GetComponent<EnemyBase>();
             enemy?.Hit(DiceHelper.Roll(stats.damagerDice) + stats.strength);
-
-            _hasAttack = false;
         }
     }
     #endregion
@@ -147,12 +167,16 @@ public class Player : MonoBehaviour
 
         Move();
         Attack();
+        Dash();
     }
 
     private void Start()
     {
         if (_hitUI == null)
             _hitUI = GetComponent<HitUI>();
+
+        if (bag == null)
+            bag = GetComponent<Accessories.Bag>();
 
         Subscribers();
     }
