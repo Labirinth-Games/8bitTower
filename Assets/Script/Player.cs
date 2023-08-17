@@ -5,6 +5,7 @@ using Manager;
 using System.Collections;
 using System.Collections.Generic;
 using UI;
+using UnityEngine.InputSystem;
 using UnityEngine;
 using Utils;
 
@@ -31,6 +32,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float fastSpeed = 4;
     [SerializeField] private float cooldownDash = 1f;
 
+    private GlobalControls _globalControls;
     private UI.HitUI _hitUI;
     private bool _isDeath = false;
 
@@ -41,35 +43,37 @@ public class Player : MonoBehaviour
     #region Actions
     public void Move()
     {
-        float xMove = Input.GetAxisRaw("Horizontal");
-        float yMove = Input.GetAxisRaw("Vertical");
+        Vector2 movement = _globalControls.Player.Movement.ReadValue<Vector2>();
+
+        if (movement == null) return;
+
         float currentSpeed = speed;
 
-        if (xMove != 0 || yMove != 0)
+        if (movement.x != 0 || movement .y != 0)
             animator.SetBool("Walk", true);
         else
             animator.SetBool("Walk", false);
 
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-            currentSpeed = fastSpeed;
+        //if (Input.GetKeyDown(KeyCode.LeftShift))
+        //    currentSpeed = fastSpeed;
 
-        if (xMove != 0)
+        if (movement.x != 0)
         {
-            _playerFaceSide = xMove;
+            _playerFaceSide = movement.x;
 
-            SpriteUtils.Flip(xMove, GetComponentInChildren<Renderer>().transform);
-            transform.position += Vector3.right * xMove * currentSpeed * Time.deltaTime;
+            SpriteUtils.Flip(movement.x, GetComponentInChildren<Renderer>().transform);
+            transform.position += Vector3.right * movement.x * currentSpeed * Time.deltaTime;
         }
 
-        if (yMove != 0)
+        if (movement.y != 0)
         {
-            transform.position += Vector3.up * yMove * currentSpeed * Time.deltaTime;
+            transform.position += Vector3.up * movement.y * currentSpeed * Time.deltaTime;
         }
     }
 
     public void Dash()
     {
-        if(Input.GetKeyDown(KeyCode.LeftShift) && Time.time > _timeDashCooldown)
+        if(_globalControls.Player.Dash.triggered && Time.time > _timeDashCooldown)
         {
             _timeDashCooldown = Time.time + cooldownDash;
 
@@ -84,7 +88,7 @@ public class Player : MonoBehaviour
 
     public void Attack()
     {
-       attackHold?.Hold();
+       attackHold?.Hold(_globalControls);
     }
 
     public void Hit(float damage)
@@ -179,6 +183,21 @@ public class Player : MonoBehaviour
             bag = GetComponent<Accessories.Bag>();
 
         Subscribers();
+    }
+
+    private void Awake()
+    {
+        _globalControls = new GlobalControls();        
+    }
+
+    private void OnEnable()
+    {
+        _globalControls.Enable();
+    }
+
+    private void OnDisable()
+    {
+        _globalControls.Disable();
     }
     #endregion
 }

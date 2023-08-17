@@ -6595,7 +6595,9 @@ MonoBehaviour:
   isUnlockWithItem: 0
   unlockZonePoint: {fileID: 183032270}
   items: []
-  conditions: []
+  conditions:
+  - input: {fileID: 2111802484}
+    condition: 1
 --- !u!1001 &804606806
 PrefabInstance:
   m_ObjectHideFlags: 0

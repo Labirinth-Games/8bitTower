@@ -24,18 +24,22 @@ namespace Helpers
 
         private float _fireRateCooldown;
         private bool _isLoaddingAttack = false;
+        private bool _isHold = false;
 
-        public void Hold()
+        public void Hold(GlobalControls globalControls)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (globalControls.Player.Attack.ReadValue<float>() == 1 && _isHold == false)
             {
                 _startTimer = Time.time;
                 _isLoaddingAttack = true;
+                _isHold = true;
             }
 
-            if (Input.GetKeyUp(KeyCode.Space))
+            if (globalControls.Player.Attack.ReadValue<float>() == 0 && _isHold)
             {
                 _isLoaddingAttack = false;
+                _isHold = false;
+
                 OnAttackFire?.Invoke();
 
                 if(Time.time > _fireRateCooldown)
