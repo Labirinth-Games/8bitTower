@@ -15,9 +15,9 @@ namespace UI
             if (HitUIPrefab != null)
             {
                 var instance = Instantiate(HitUIPrefab);
-                instance.transform.position = new Vector2(transform.position.x, transform.position.y + .5f);
+                instance.transform.position = new Vector2(transform.position.x, transform.position.y + .7f);
 
-                instance.transform.DOShakePosition(1f, .2f);
+                instance.transform.DOShakePosition(1f, .3f);
                 instance.GetComponentInChildren<TextMeshPro>().text = value;
                 instance.GetComponentInChildren<TextMeshPro>().color = Utils.ColorUtils.HexToColor(hexColor);
 

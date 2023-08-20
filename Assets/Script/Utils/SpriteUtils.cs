@@ -10,6 +10,7 @@ namespace Utils
         {
             Vector3 scale = transform.localScale;
             float signScaleCurrent = Mathf.Sign(scale.x);
+            dirX = Mathf.Sign(dirX);
 
             if (dirX == signScaleCurrent)
                 return;

@@ -19,68 +19,59 @@ public class Player : MonoBehaviour
     public Accessories.Bag bag;
 
     [Header("Attacks")]
-    public GameObject fireballPrefab;
-    public GameObject bigBlasterPrefab;
+    public GameObject attackLevel2;
+    public GameObject attackLevel3;
 
     [Header("Stats")]
     [SerializeField] private StatsScriptableObject stats;
-    
 
-    [SerializeField] private float maxHp = 26;
+
+    //[SerializeField] private float maxHp = 26;
     [SerializeField] private float hp = 26;
     [SerializeField] private float speed = 2;
-    [SerializeField] private float fastSpeed = 4;
+    //[SerializeField] private float fastSpeed = 4;
     [SerializeField] private float cooldownDash = 1f;
 
-    private GlobalControls _globalControls;
     private UI.HitUI _hitUI;
     private bool _isDeath = false;
 
-    private bool _hasAttack = false;
+    [SerializeField] private bool _hasAttack = false;
     private float _playerFaceSide = 1;
     private float _timeDashCooldown;
 
     #region Actions
     public void Move()
     {
-        Vector2 movement = _globalControls.Player.Movement.ReadValue<Vector2>();
+        Vector2 movement = GameManager.Instance.globalControls.Player.Movement.ReadValue<Vector2>();
 
         if (movement == null) return;
 
-        float currentSpeed = speed;
-
-        if (movement.x != 0 || movement .y != 0)
-            animator.SetBool("Walk", true);
-        else
-            animator.SetBool("Walk", false);
-
-        //if (Input.GetKeyDown(KeyCode.LeftShift))
-        //    currentSpeed = fastSpeed;
+        animator.SetBool("Walk", (movement.x != 0 || movement.y != 0));
 
         if (movement.x != 0)
         {
             _playerFaceSide = movement.x;
 
             SpriteUtils.Flip(movement.x, GetComponentInChildren<Renderer>().transform);
-            transform.position += Vector3.right * movement.x * currentSpeed * Time.deltaTime;
+            transform.position += Vector3.right * movement.x * speed * Time.deltaTime;
         }
-
-        if (movement.y != 0)
+        else if (movement.y != 0)
         {
-            transform.position += Vector3.up * movement.y * currentSpeed * Time.deltaTime;
+            transform.position += Vector3.up * movement.y * speed * Time.deltaTime;
         }
     }
 
     public void Dash()
     {
-        if(_globalControls.Player.Dash.triggered && Time.time > _timeDashCooldown)
+        if (GameManager.Instance.globalControls.Player.Dash.triggered && Time.time > _timeDashCooldown)
         {
             _timeDashCooldown = Time.time + cooldownDash;
 
+            // sprite smoke when doing the dash
             var instante = Instantiate(dashPrefab);
             instante.transform.position = new Vector2(transform.position.x, transform.position.y - .3f);
             SpriteUtils.Flip(_playerFaceSide, instante.transform);
-
+            // move player when do dash
             transform.position += Vector3.right * _playerFaceSide * speed * (.3f * stats.dexterity);
             Destroy(instante, .6f);
         }
@@ -88,30 +79,38 @@ public class Player : MonoBehaviour
 
     public void Attack()
     {
-       attackHold?.Hold(_globalControls);
+        attackHold?.Hold(GameManager.Instance.globalControls);
     }
 
     public void Hit(float damage)
     {
-        if(_isDeath) return;
+        if (_isDeath) return;
 
-        if (hp < 0) Die();
-        
-        if(damage >= stats.protection)
+        if (damage >= stats.protection)
         {
             hp -= damage;
             _hitUI.Display(damage.ToString());
+
+            if (hp <= 0) Die();
         }
         else
         {
+            // TODO - no futudo aqui alem de dar miss pode colocar uma anima��o de escudo
             _hitUI.Display("Miss");
         }
     }
 
-    private void Die() 
+    private void Die()
     {
-        animator.SetTrigger("Die");
         _isDeath = true;
+
+        animator.SetTrigger("Die");
+        GameManager.Instance.GameOver();
+    }
+
+    private void HitBoxRemove()
+    {
+        _hasAttack = false;
     }
     #endregion
 
@@ -121,15 +120,13 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Colliders
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         // attack hit box
-        if (collision.transform.CompareTag("Enemy") && _hasAttack)
+        if (collision.TryGetComponent<EnemyBase>(out EnemyBase enemy) && _hasAttack)
         {
             _hasAttack = false;
-
-            EnemyBase enemy = collision.GetComponent<EnemyBase>();
-            enemy?.Hit(DiceHelper.Roll(stats.damagerDice) + stats.strength);
+            enemy.Hit(DiceHelper.Roll(stats.damagerDice) + stats.strength);
         }
     }
     #endregion
@@ -139,24 +136,31 @@ public class Player : MonoBehaviour
         // config attack hold
         if (attackHold != null)
         {
-            attackHold.OnAttackFire.AddListener(() => { _hasAttack = true; });
-            attackHold.OnShortPress.AddListener(() => { animator.SetTrigger("Attack"); });
+            attackHold.OnAttackFire.AddListener(() =>
+            {
+                _hasAttack = true;
+                Invoke(nameof(HitBoxRemove), .2f);
+            });
+            attackHold.OnShortPress.AddListener(() =>
+            {
+                animator.SetTrigger("Attack");
+            });
             attackHold.OnMediumPress.AddListener(() =>
             {
                 animator.SetTrigger("Attack Medium");
 
-                var instante = Instantiate(fireballPrefab);
+                var instante = Instantiate(attackLevel2);
 
                 instante.GetComponent<Fireball>().SetDirection(_playerFaceSide);
                 SpriteUtils.Flip(_playerFaceSide, instante.transform);
                 instante.transform.position = new Vector2(transform.position.x + (.5f * _playerFaceSide), transform.position.y);
-            }); 
-            
+            });
+
             attackHold.OnLongPress.AddListener(() =>
             {
                 animator.SetTrigger("Attack Medium");
 
-                var instante = Instantiate(bigBlasterPrefab);
+                var instante = Instantiate(attackLevel3);
 
                 instante.GetComponent<BigBlaster>().SetDirection(_playerFaceSide);
                 instante.transform.position = new Vector2(transform.position.x + (.5f * _playerFaceSide), transform.position.y);
@@ -167,7 +171,7 @@ public class Player : MonoBehaviour
     #region Unity Events
     private void Update()
     {
-        if (_isDeath) return;
+        if (_isDeath || GameManager.Instance.isPaused) return;
 
         Move();
         Attack();
@@ -183,21 +187,6 @@ public class Player : MonoBehaviour
             bag = GetComponent<Accessories.Bag>();
 
         Subscribers();
-    }
-
-    private void Awake()
-    {
-        _globalControls = new GlobalControls();        
-    }
-
-    private void OnEnable()
-    {
-        _globalControls.Enable();
-    }
-
-    private void OnDisable()
-    {
-        _globalControls.Disable();
     }
     #endregion
 }
