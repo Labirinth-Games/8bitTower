@@ -9,7 +9,9 @@ namespace Manager
     {
         [Header("References")]
         [SerializeField] private GameObject menuPausePrefab;
+        [SerializeField] private GameObject menuQuickMenuLearnPrefab;
         [SerializeField] private GameObject menuGameOverPrefab;
+        public LearnManager learnManager;
 
         [Header("settings")]
         public StatsScriptableObject playerStats;
@@ -31,14 +33,14 @@ namespace Manager
         public void TogglePause()
         {
             isPaused = !isPaused;
-            menuPausePrefab.SetActive(isPaused);
         }
 
         private void Pause()
         {
             if (globalControls.Game.Pause.WasPressedThisFrame())
             {
-               TogglePause();
+                TogglePause();
+                menuPausePrefab.SetActive(isPaused);
             }
         }
         
@@ -46,12 +48,22 @@ namespace Manager
         {
             menuGameOverPrefab.SetActive(true);
         }
+
+        public void QuickMenuLearn()
+        {
+            if (globalControls.Game.QuickMenuLearn.WasPressedThisFrame())
+            {
+                TogglePause();
+                menuQuickMenuLearnPrefab.SetActive(isPaused);
+            }
+        }
         #endregion
 
         #region Unity Events
         private void Update()
         {
-            Pause();    
+            Pause();
+            QuickMenuLearn();
         }
 
         protected override void Awake()

@@ -8,6 +8,7 @@ using UI;
 using UnityEngine.InputSystem;
 using UnityEngine;
 using Utils;
+using Learn;
 
 [RequireComponent(typeof(SpriteUtils))]
 public class Player : MonoBehaviour
@@ -18,13 +19,8 @@ public class Player : MonoBehaviour
     public GameObject dashPrefab;
     public Accessories.Bag bag;
 
-    [Header("Attacks")]
-    public GameObject attackLevel2;
-    public GameObject attackLevel3;
-
     [Header("Stats")]
     [SerializeField] private StatsScriptableObject stats;
-
 
     //[SerializeField] private float maxHp = 26;
     [SerializeField] private float hp = 26;
@@ -71,6 +67,7 @@ public class Player : MonoBehaviour
             var instante = Instantiate(dashPrefab);
             instante.transform.position = new Vector2(transform.position.x, transform.position.y - .3f);
             SpriteUtils.Flip(_playerFaceSide, instante.transform);
+
             // move player when do dash
             transform.position += Vector3.right * _playerFaceSide * speed * (.3f * stats.dexterity);
             Destroy(instante, .6f);
@@ -147,23 +144,30 @@ public class Player : MonoBehaviour
             });
             attackHold.OnMediumPress.AddListener(() =>
             {
-                animator.SetTrigger("Attack Medium");
+                if(GameManager.Instance.learnManager.attackSecond != null)
+                {
+                    animator.SetTrigger("Attack Medium");
 
-                var instante = Instantiate(attackLevel2);
+                    var instante = Instantiate(GameManager.Instance.learnManager.attackSecond);
 
-                instante.GetComponent<Fireball>().SetDirection(_playerFaceSide);
-                SpriteUtils.Flip(_playerFaceSide, instante.transform);
-                instante.transform.position = new Vector2(transform.position.x + (.5f * _playerFaceSide), transform.position.y);
+                    instante.GetComponent<LearnBase>().SetDirection(_playerFaceSide);
+                    SpriteUtils.Flip(_playerFaceSide, instante.transform);
+                    instante.transform.position = new Vector2(transform.position.x + (.5f * _playerFaceSide), transform.position.y);
+                }
+
             });
 
             attackHold.OnLongPress.AddListener(() =>
             {
-                animator.SetTrigger("Attack Medium");
+                if(GameManager.Instance.learnManager.attackThirth != null)
+                {
+                    animator.SetTrigger("Attack Medium");
 
-                var instante = Instantiate(attackLevel3);
+                    var instante = Instantiate(GameManager.Instance.learnManager.attackThirth);
 
-                instante.GetComponent<BigBlaster>().SetDirection(_playerFaceSide);
-                instante.transform.position = new Vector2(transform.position.x + (.5f * _playerFaceSide), transform.position.y);
+                    instante.GetComponent<LearnBase>().SetDirection(_playerFaceSide);
+                    instante.transform.position = new Vector2(transform.position.x + (.5f * _playerFaceSide), transform.position.y);
+                }
             });
         }
     }

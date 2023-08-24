@@ -224,6 +224,15 @@ public partial class @GlobalControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""QuickMenuLearn"",
+                    ""type"": ""Button"",
+                    ""id"": ""816d0748-4e44-4e86-abf4-f83ebba2af0c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -246,6 +255,17 @@ public partial class @GlobalControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6de9c599-8617-438f-b8b6-a54442bc015a"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""QuickMenuLearn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -364,6 +384,76 @@ public partial class @GlobalControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""QuickMenuLearn"",
+            ""id"": ""1b9d8678-bfcd-493f-b30f-20a9342e4134"",
+            ""actions"": [
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""Button"",
+                    ""id"": ""260fe6f6-95b2-4b70-9e78-206e78cdcefc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Active"",
+                    ""type"": ""Button"",
+                    ""id"": ""928015d7-9902-4d18-b211-55925c04217a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""Keyboard"",
+                    ""id"": ""488efb80-f6ea-4356-8a7e-bb32ab029c53"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""70e03c6c-3abc-4eb7-ae09-214fac3723de"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""5f84c92b-4397-428a-9626-1a92e6e5c9c4"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b8310e9c-5c88-43d9-9b57-e92a9c5b4dd7"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Active"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -376,10 +466,15 @@ public partial class @GlobalControls: IInputActionCollection2, IDisposable
         // Game
         m_Game = asset.FindActionMap("Game", throwIfNotFound: true);
         m_Game_Pause = m_Game.FindAction("Pause", throwIfNotFound: true);
+        m_Game_QuickMenuLearn = m_Game.FindAction("QuickMenuLearn", throwIfNotFound: true);
         // Menu
         m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
         m_Menu_Move = m_Menu.FindAction("Move", throwIfNotFound: true);
         m_Menu_Select = m_Menu.FindAction("Select", throwIfNotFound: true);
+        // QuickMenuLearn
+        m_QuickMenuLearn = asset.FindActionMap("QuickMenuLearn", throwIfNotFound: true);
+        m_QuickMenuLearn_Move = m_QuickMenuLearn.FindAction("Move", throwIfNotFound: true);
+        m_QuickMenuLearn_Active = m_QuickMenuLearn.FindAction("Active", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -504,11 +599,13 @@ public partial class @GlobalControls: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Game;
     private List<IGameActions> m_GameActionsCallbackInterfaces = new List<IGameActions>();
     private readonly InputAction m_Game_Pause;
+    private readonly InputAction m_Game_QuickMenuLearn;
     public struct GameActions
     {
         private @GlobalControls m_Wrapper;
         public GameActions(@GlobalControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Pause => m_Wrapper.m_Game_Pause;
+        public InputAction @QuickMenuLearn => m_Wrapper.m_Game_QuickMenuLearn;
         public InputActionMap Get() { return m_Wrapper.m_Game; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -521,6 +618,9 @@ public partial class @GlobalControls: IInputActionCollection2, IDisposable
             @Pause.started += instance.OnPause;
             @Pause.performed += instance.OnPause;
             @Pause.canceled += instance.OnPause;
+            @QuickMenuLearn.started += instance.OnQuickMenuLearn;
+            @QuickMenuLearn.performed += instance.OnQuickMenuLearn;
+            @QuickMenuLearn.canceled += instance.OnQuickMenuLearn;
         }
 
         private void UnregisterCallbacks(IGameActions instance)
@@ -528,6 +628,9 @@ public partial class @GlobalControls: IInputActionCollection2, IDisposable
             @Pause.started -= instance.OnPause;
             @Pause.performed -= instance.OnPause;
             @Pause.canceled -= instance.OnPause;
+            @QuickMenuLearn.started -= instance.OnQuickMenuLearn;
+            @QuickMenuLearn.performed -= instance.OnQuickMenuLearn;
+            @QuickMenuLearn.canceled -= instance.OnQuickMenuLearn;
         }
 
         public void RemoveCallbacks(IGameActions instance)
@@ -599,6 +702,60 @@ public partial class @GlobalControls: IInputActionCollection2, IDisposable
         }
     }
     public MenuActions @Menu => new MenuActions(this);
+
+    // QuickMenuLearn
+    private readonly InputActionMap m_QuickMenuLearn;
+    private List<IQuickMenuLearnActions> m_QuickMenuLearnActionsCallbackInterfaces = new List<IQuickMenuLearnActions>();
+    private readonly InputAction m_QuickMenuLearn_Move;
+    private readonly InputAction m_QuickMenuLearn_Active;
+    public struct QuickMenuLearnActions
+    {
+        private @GlobalControls m_Wrapper;
+        public QuickMenuLearnActions(@GlobalControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Move => m_Wrapper.m_QuickMenuLearn_Move;
+        public InputAction @Active => m_Wrapper.m_QuickMenuLearn_Active;
+        public InputActionMap Get() { return m_Wrapper.m_QuickMenuLearn; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(QuickMenuLearnActions set) { return set.Get(); }
+        public void AddCallbacks(IQuickMenuLearnActions instance)
+        {
+            if (instance == null || m_Wrapper.m_QuickMenuLearnActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_QuickMenuLearnActionsCallbackInterfaces.Add(instance);
+            @Move.started += instance.OnMove;
+            @Move.performed += instance.OnMove;
+            @Move.canceled += instance.OnMove;
+            @Active.started += instance.OnActive;
+            @Active.performed += instance.OnActive;
+            @Active.canceled += instance.OnActive;
+        }
+
+        private void UnregisterCallbacks(IQuickMenuLearnActions instance)
+        {
+            @Move.started -= instance.OnMove;
+            @Move.performed -= instance.OnMove;
+            @Move.canceled -= instance.OnMove;
+            @Active.started -= instance.OnActive;
+            @Active.performed -= instance.OnActive;
+            @Active.canceled -= instance.OnActive;
+        }
+
+        public void RemoveCallbacks(IQuickMenuLearnActions instance)
+        {
+            if (m_Wrapper.m_QuickMenuLearnActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IQuickMenuLearnActions instance)
+        {
+            foreach (var item in m_Wrapper.m_QuickMenuLearnActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_QuickMenuLearnActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public QuickMenuLearnActions @QuickMenuLearn => new QuickMenuLearnActions(this);
     public interface IPlayerActions
     {
         void OnMovement(InputAction.CallbackContext context);
@@ -608,10 +765,16 @@ public partial class @GlobalControls: IInputActionCollection2, IDisposable
     public interface IGameActions
     {
         void OnPause(InputAction.CallbackContext context);
+        void OnQuickMenuLearn(InputAction.CallbackContext context);
     }
     public interface IMenuActions
     {
         void OnMove(InputAction.CallbackContext context);
         void OnSelect(InputAction.CallbackContext context);
+    }
+    public interface IQuickMenuLearnActions
+    {
+        void OnMove(InputAction.CallbackContext context);
+        void OnActive(InputAction.CallbackContext context);
     }
 }

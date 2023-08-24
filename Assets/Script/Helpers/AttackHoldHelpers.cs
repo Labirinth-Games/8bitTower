@@ -64,6 +64,8 @@ namespace Helpers
 
         private void IncrementBarRender()
         {
+            if (_startTimer + .5f > Time.time) return; // only show bar when hold for along time 
+
             var scale = barAttackPrefab.transform.localScale;
             scale.x += .003f;
             

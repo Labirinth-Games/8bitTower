@@ -58,7 +58,7 @@
     <Analyzer Include="D:\Unity\Edit\2023.1.0b15\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Script\Powers\Fireball.cs" />
+    <Compile Include="Assets\Script\Learn\Fireball.cs" />
     <Compile Include="Assets\Script\Elements\Door.cs" />
     <Compile Include="Assets\Script\Helpers\AttackHoldHelpers.cs" />
     <Compile Include="Assets\Script\Assistent.cs" />
@@ -70,18 +70,25 @@
     <Compile Include="Assets\Script\GameManager.cs" />
     <Compile Include="Assets\Script\UI\MenuUI.cs" />
     <Compile Include="Assets\Script\Elements\Stair.cs" />
+    <Compile Include="Assets\Script\Managers\LearnManager.cs" />
     <Compile Include="Assets\Script\Player.cs" />
     <Compile Include="Assets\Script\Enemies\EnemyBase.cs" />
+    <Compile Include="Assets\Script\HUD\SlotHud.cs" />
     <Compile Include="Assets\Script\Elements\Lever.cs" />
     <Compile Include="Assets\Script\Helpers\MoveRandomly.cs" />
     <Compile Include="Assets\Script\Managers\MenuManager.cs" />
+    <Compile Include="Assets\Script\Learn\LearnBase.cs" />
+    <Compile Include="Assets\Script\Managers\SlotManager.cs" />
+    <Compile Include="Assets\Script\Learn\BigBlaster.cs" />
     <Compile Include="Assets\Script\HUD\HpHud.cs" />
-    <Compile Include="Assets\Script\Powers\BigBlaster.cs" />
     <Compile Include="Assets\Script\Utils\SpriteUtils.cs" />
     <Compile Include="Assets\Script\Elements\Zone.cs" />
+    <Compile Include="Assets\Script\HUD\SlotDescriptionHud.cs" />
     <Compile Include="Assets\Script\Items\Key.cs" />
     <Compile Include="Assets\Script\Items\ItemBase.cs" />
     <Compile Include="Assets\Script\Helpers\Unlock.cs" />
+    <Compile Include="Assets\Script\UI\LearnUI.cs" />
+    <Compile Include="Assets\Script\HUD\QuickMenuLearnHud.cs" />
     <Compile Include="Assets\Script\ScriptableObjects\StatsScriptableObject.cs" />
     <Compile Include="Assets\Script\GlobalControls.cs" />
     <Compile Include="Assets\Script\ScriptableObjects\BookDialogs.cs" />

@@ -14,7 +14,7 @@ namespace Helpers
         [Header("Callback")]
         public UnityEvent OnFinish;
 
-        private int _chapterActual = 0; // capitulo, momento separado por bloco de momento da historia
+        //private int _chapterActual = 0; // capitulo, momento separado por bloco de momento da historia
         private int _paragraphActual = 0; // paragrafo, fala em si que a classe irá produzir
         private int _chapterMax;
         private int _paragraphMax;
